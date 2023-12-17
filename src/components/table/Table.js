@@ -63,7 +63,4 @@ export class Table extends ExcelComponent {
       };
     }
   }
-
-  onMouseup(event) {
-  }
 }
