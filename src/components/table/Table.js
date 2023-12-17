@@ -28,24 +28,21 @@ export class Table extends ExcelComponent {
       // const $parent = $resizer.$el.closest('.column'); // better but not enough
       const $parent = $resizer.closest('[data-type="resizable"]');
       const pCoords = $parent.getPosData();
-      let cCoords = $resizer.getPosData();
-      let x = event.pageX;
-      let y = event.pageY;
       let delta;
       let value;
+      let x = 0;
+      let y = 0;
 
       document.onmousemove = e => {
-        cCoords = $resizer.getPosData();
+        const cCoords = $resizer.getPosData();
         x = e.pageX;
         y = e.pageY;
         if (direction === 'col') {
-          delta = x - pCoords.right;
-          value = $resizer.$el.style.right + delta;
-          $resizer.$el.style.transform = `translateX(${value}px)`;
+          delta = -(x - pCoords.right + 3);
+          $resizer.$el.style.right = `${delta}px`;
         } else {
-          delta = y - pCoords.bottom;
-          value = $resizer.$el.style.bottom + delta;
-          $resizer.$el.style.transform = `translateY(${value}px)`;
+          delta = -(y - pCoords.bottom + 3);
+          $resizer.$el.style.bottom = `${delta}px`;
         }
       }
 
@@ -55,13 +52,13 @@ export class Table extends ExcelComponent {
           delta = x - pCoords.right;
           value = pCoords.width + delta;
           $parent.$el.style.width = `${value}px`;
-          $resizer.$el.style.transform = 'unset';
+          $resizer.$el.removeAttribute('style');
           this.resizeColumns(columnIndex, value);
         } else {
           delta = y - pCoords.bottom;
           value = pCoords.height + delta;
           $parent.$el.style.height = `${value}px`;
-          $resizer.$el.style.transform = 'unset';
+          $resizer.$el.removeAttribute('style');
         }
         document.onmousemove = null
       };
