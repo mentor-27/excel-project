@@ -23,30 +23,48 @@ export class Table extends ExcelComponent {
   onMousedown(event) {
     if (event.target.dataset.resize) {
       const $resizer = $(event.target);
-      const direction = $resizer.$el.dataset.resize;
+      const direction = $resizer.data.resize;
       // const $parent = $resizer.$el.parentNode; // bad
       // const $parent = $resizer.$el.closest('.column'); // better but not enough
       const $parent = $resizer.closest('[data-type="resizable"]');
-      const coords = $parent.getPosData();
+      const pCoords = $parent.getPosData();
+      let cCoords = $resizer.getPosData();
+      let x = event.pageX;
+      let y = event.pageY;
+      let delta;
+      let value;
 
       document.onmousemove = e => {
-        let delta;
-        let value;
+        cCoords = $resizer.getPosData();
+        x = e.pageX;
+        y = e.pageY;
         if (direction === 'col') {
-          const columnIndex = $parent.$el.dataset.columnIndex;
-          delta = e.pageX - coords.right;
-          value = coords.width + delta;
-          $parent.$el.style.width = `${value}px`;
-          this.resizeColumns(columnIndex, value);
+          delta = x - pCoords.right;
+          value = $resizer.$el.style.right + delta;
+          $resizer.$el.style.transform = `translateX(${value}px)`;
         } else {
-          delta = e.pageY - coords.bottom;
-          value = coords.height + delta;
-          $parent.$el.style.height = `${value}px`;
+          delta = y - pCoords.bottom;
+          value = $resizer.$el.style.bottom + delta;
+          $resizer.$el.style.transform = `translateY(${value}px)`;
         }
-        document.querySelector(`[data-column-index=""]`);
       }
 
-      document.onmouseup = () => document.onmousemove = null;
+      document.onmouseup = () => {
+        if (direction === 'col') {
+          const columnIndex = $parent.data.columnIndex;
+          delta = x - pCoords.right;
+          value = pCoords.width + delta;
+          $parent.$el.style.width = `${value}px`;
+          $resizer.$el.style.transform = 'unset';
+          this.resizeColumns(columnIndex, value);
+        } else {
+          delta = y - pCoords.bottom;
+          value = pCoords.height + delta;
+          $parent.$el.style.height = `${value}px`;
+          $resizer.$el.style.transform = 'unset';
+        }
+        document.onmousemove = null
+      };
     }
   }
 
