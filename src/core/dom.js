@@ -32,6 +32,14 @@ class Dom {
     else this.$el.appendChild(node);
     return this;
   }
+
+  closest(selector) {
+    return $(this.$el.closest(selector));
+  }
+
+  getPosData() {
+    return this.$el.getBoundingClientRect();
+  }
 }
 
 export function $(selector) {
