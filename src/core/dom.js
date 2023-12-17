@@ -32,6 +32,23 @@ class Dom {
     else this.$el.appendChild(node);
     return this;
   }
+
+  get data() {
+    return this.$el.dataset;
+  }
+
+  closest(selector) {
+    return $(this.$el.closest(selector));
+  }
+
+  getPosData() {
+    return this.$el.getBoundingClientRect();
+  }
+
+  css(styles = {}) {
+    Object.keys(styles).forEach(key => this.$el.style[key] = styles[key]);
+    return this.$el;
+  }
 }
 
 export function $(selector) {

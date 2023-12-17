@@ -15,9 +15,13 @@
     min-height: 20px;
     height: $row-height;
 
+    &:first-child {
+      user-select: none;
+    }
   }
 
   .row-info {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,6 +30,7 @@
     border: 1px solid $border-color;
     background: #f8f9fa;
     border-top: none;
+    user-select: none;
   }
 
   .row-data {
@@ -33,6 +38,7 @@
   }
 
   .column {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,8 +64,57 @@
 
     &.selected {
       border: none;
-      outline: 2px solid #3c74ff;
+      outline: 2px solid $primary-color;
       z-index: 2;
+    }
+  }
+
+  .col-resize,
+  .row-resize {
+    position: absolute;
+    background: $primary-color;
+    opacity: 0;
+    z-index: 1;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .col-resize {
+    inset: 0 -3px 0 auto;
+    width: 5px;
+
+    &:hover {
+      cursor: col-resize;
+    }
+    
+    &:active::after {
+      content: "";
+      position: absolute;
+      width: 1px;
+      left: 2px;
+      height: calc(100vh - $header-height - $toolbar-height - $formula-height);
+      background: $primary-color;
+    }
+  }
+
+  .row-resize {
+    inset: auto 0 -3px 0;
+    height: 5px;
+    width: unset;
+
+    &:hover {
+      cursor: row-resize;
+    }
+
+    &:active::after {
+      content: "";
+      position: absolute;
+      height: 1px;
+      top: 2px;
+      width: 100vw;
+      background: $primary-color;
     }
   }
 }
