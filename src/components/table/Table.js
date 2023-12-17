@@ -27,21 +27,20 @@ export class Table extends ExcelComponent {
       // const $parent = $resizer.$el.parentNode; // bad
       // const $parent = $resizer.$el.closest('.column'); // better but not enough
       const $parent = $resizer.closest('[data-type="resizable"]');
-      const pCoords = $parent.getPosData();
+      const coords = $parent.getPosData();
       let delta;
       let value;
       let x = 0;
       let y = 0;
 
       document.onmousemove = e => {
-        const cCoords = $resizer.getPosData();
         x = e.pageX;
         y = e.pageY;
         if (direction === 'col') {
-          delta = -(x - pCoords.right + 3);
+          delta = -(x - coords.right + 3);
           $resizer.$el.style.right = `${delta}px`;
         } else {
-          delta = -(y - pCoords.bottom + 3);
+          delta = -(y - coords.bottom + 3);
           $resizer.$el.style.bottom = `${delta}px`;
         }
       }
@@ -49,14 +48,14 @@ export class Table extends ExcelComponent {
       document.onmouseup = () => {
         if (direction === 'col') {
           const columnIndex = $parent.data.columnIndex;
-          delta = x - pCoords.right;
-          value = pCoords.width + delta;
+          delta = x - coords.right;
+          value = coords.width + delta;
           $parent.$el.style.width = `${value}px`;
           $resizer.$el.removeAttribute('style');
           this.resizeColumns(columnIndex, value);
         } else {
-          delta = y - pCoords.bottom;
-          value = pCoords.height + delta;
+          delta = y - coords.bottom;
+          value = coords.height + delta;
           $parent.$el.style.height = `${value}px`;
           $resizer.$el.removeAttribute('style');
         }
